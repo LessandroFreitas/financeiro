@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Financeira e de Lembretes</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4cb5ae;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .date-selectors {
+            display: flex;
+            gap: 10px;
+        }
+        
+        select, input, button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .day-header {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .day {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            min-height: 150px;
+            position: relative;
+        }
+        
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            text-align: right;
+        }
+        
+        .event {
+            background-color: #e9ecef;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .event.concluido {
+            border-left-color: var(--success-color);
+            opacity: 0.8;
+        }
+        
+        .event-descricao {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .event-valor {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .event-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        
+        .day-total {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-weight: bold;
+            background-color: var(--light-color);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .month-summary {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .month-total {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-cancel {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-save {
+            background-color: var(--success-color);
+        }
+        
+        .empty-day {
+            background-color: #f8f9fa;
+            border: 1px dashed #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .calendar {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .date-selectors {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            select {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Agenda Financeira e de Lembretes</h1>
+        </header>
+        
+        <div class="controls">
+            <div class="date-selectors">
+                <select id="ano-select">
+                    <!-- Os anos serão preenchidos via JavaScript -->
+                </select>
+                <select id="mes-select">
+                    <option value="0">Janeiro</option>
+                    <option value="1">Fevereiro</option>
+                    <option value="2">Março</option>
+                    <option value="3">Abril</option>
+                    <option value="4">Maio</option>
+                    <option value="5">Junho</option>
+                    <option value="6">Julho</option>
+                    <option value="7">Agosto</option>
+                    <option value="8">Setembro</option>
+                    <option value="9">Outubro</option>
+                    <option value="10">Novembro</option>
+                    <option value="11">Dezembro</option>
+                </select>
+            </div>
+            <button id="btn-adicionar-mes">Adicionar Novo Evento</button>
+        </div>
+        
+        <div class="calendar" id="calendar">
+            <!-- Os dias serão gerados via JavaScript -->
+        </div>
+        
+        <div class="month-summary">
+            <h2>Resumo do Mês</h2>
+            <div class="month-total" id="month-total">R$ 0,00</div>
+        </div>
+    </div>
+    
+    <!-- Modal para adicionar/editar eventos -->
+    <div class="modal" id="event-modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Adicionar Evento</h2>
+            <form id="event-form">
+                <div class="form-group">
+                    <label for="event-date">Data:</label>
+                    <input type="date" id="event-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-desc">Descrição:</label>
+                    <textarea id="event-desc" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="event-value">Valor (R$):</label>
+                    <input type="number" id="event-value" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="event-status">Status:</label>
+                    <select id="event-status">
+                        <option value="pendente">Pendente</option>
+                        <option value="concluido">Concluído</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-save">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const anoSelect = document.getElementById('ano-select');
+            const mesSelect = document.getElementById('mes-select');
+            const calendarEl = document.getElementById('calendar');
+            const monthTotalEl = document.getElementById('month-total');
+            const eventModal = document.getElementById('event-modal');
+            const eventForm = document.getElementById('event-form');
+            const btnCancel = document.getElementById('btn-cancel');
+            const btnAdicionarMes = document.getElementById('btn-adicionar-mes');
+            
+            // Variáveis de estado
+            let eventos = JSON.parse(localStorage.getItem('agendaEventos')) || {};
+            let currentDate = new Date();
+            let selectedDate = new Date();
+            let editingEventId = null;
+            
+            // Inicializar anos no select
+            const currentYear = currentDate.getFullYear();
+            for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === currentYear) option.selected = true;
+                anoSelect.appendChild(option);
+            }
+            
+            // Definir mês atual
+            mesSelect.value = currentDate.getMonth();
+            
+            // Carregar calendário
+            carregarCalendario();
+            
+            // Event Listeners
+            anoSelect.addEventListener('change', carregarCalendario);
+            mesSelect.addEventListener('change', carregarCalendario);
+            btnAdicionarMes.addEventListener('click', abrirModalAdicionar);
+            btnCancel.addEventListener('click', fecharModal);
+            eventForm.addEventListener('submit', salvarEvento);
+            
+            // Função para carregar o calendário
+            function carregarCalendario() {
+                const ano = parseInt(anoSelect.value);
+                const mes = parseInt(mesSelect.value);
+                
+                // Limpar calendário
+                calendarEl.innerHTML = '';
+                
+                // Adicionar cabeçalhos dos dias da semana
+                const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                diasSemana.forEach(dia => {
+                    const diaHeader = document.createElement('div');
+                    diaHeader.className = 'day-header';
+                    diaHeader.textContent = dia;
+                    calendarEl.appendChild(diaHeader);
+                });
+                
+                // Obter primeiro dia do mês e último dia do mês
+                const primeiroDia = new Date(ano, mes, 1);
+                const ultimoDia = new Date(ano, mes + 1, 0);
+                
+                // Dias vazios no início (se o mês não começar no domingo)
+                for (let i = 0; i < primeiroDia.getDay(); i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'day empty-day';
+                    calendarEl.appendChild(emptyDay);
+                }
+                
+                // Dias do mês
+                let totalMes = 0;
+                for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = 'day';
+                    
+                    const dayNumber = document.createElement('span');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = dia;
+                    dayEl.appendChild(dayNumber);
+                    
+                    // Data atual no loop
+                    const currentLoopDate = new Date(ano, mes, dia);
+                    const dateString = formatarData(currentLoopDate);
+                    
+                    // Verificar se há eventos para este dia
+                    let totalDia = 0;
+                    if (eventos[dateString]) {
+                        eventos[dateString].forEach((evento, index) => {
+                            const eventEl = document.createElement('div');
+                            eventEl.className = `event ${evento.status}`;
+                            eventEl.dataset.id = `${dateString}-${index}`;
+                            
+                            const descricao = document.createElement('div');
+                            descricao.className = 'event-descricao';
+                            descricao.textContent = evento.descricao;
+                            eventEl.appendChild(descricao);
+                            
+                            if (evento.valor) {
+                                const valor = document.createElement('div');
+                                valor.className = 'event-valor';
+                                valor.textContent = `R$ ${parseFloat(evento.valor).toFixed(2)}`;
+                                eventEl.appendChild(valor);
+                                totalDia += parseFloat(evento.valor);
+                            }
+                            
+                            const status = document.createElement('div');
+                            status.className = 'event-status';
+                            status.textContent = evento.status === 'concluido' ? 'Concluído' : 'Pendente';
+                            eventEl.appendChild(status);
+                            
+                            // Adicionar evento de clique para editar
+                            eventEl.addEventListener('click', () => editarEvento(dateString, index));
+                            
+                            dayEl.appendChild(eventEl);
+                        });
+                    }
+                    
+                    // Adicionar botão para adicionar evento neste dia
+                    const addButton = document.createElement('button');
+                    addButton.textContent = '+';
+                    addButton.style.marginTop = '10px';
+                    addButton.addEventListener('click', () => {
+                        selectedDate = new Date(ano, mes, dia);
+                        abrirModalAdicionar();
+                    });
+                    dayEl.appendChild(addButton);
+                    
+                    // Adicionar total do dia
+                    if (totalDia > 0) {
+                        const dayTotalEl = document.createElement('div');
+                        dayTotalEl.className = 'day-total';
+                        dayTotalEl.textContent = `R$ ${totalDia.toFixed(2)}`;
+                        dayEl.appendChild(dayTotalEl);
+                        totalMes += totalDia;
+                    }
+                    
+                    calendarEl.appendChild(dayEl);
+                }
+                
+                // Atualizar total do mês
+                monthTotalEl.textContent = `R$ ${totalMes.toFixed(2)}`;
+            }
+            
+            // Função para abrir modal de adicionar evento
+            function abrirModalAdicionar() {
+                editingEventId = null;
+                document.getElementById('modal-title').textContent = 'Adicionar Evento';
+                eventForm.reset();
+                
+                // Definir data padrão para a data selecionada
+                document.getElementById('event-date').value = formatarDataParaInput(selectedDate);
+                
+                eventModal.style.display = 'flex';
+            }
+            
+            // Função para editar evento existente
+            function editarEvento(dateString, index) {
+                editingEventId = { dateString, index };
+                const evento = eventos[dateString][index];
+                
+                document.getElementById('modal-title').textContent = 'Editar Evento';
+                document.getElementById('event-date').value = dateString;
+                document.getElementById('event-desc').value = evento.descricao;
+                document.getElementById('event-value').value = evento.valor || '';
+                document.getElementById('event-status').value = evento.status;
+                
+                eventModal.style.display = 'flex';
+            }
+            
+            // Função para fechar o modal
+            function fecharModal() {
+                eventModal.style.display = 'none';
+            }
+            
+            // Função para salvar evento (novo ou editado)
+            function salvarEvento(e) {
+                e.preventDefault();
+                
+                const dateString = document.getElementById('event-date').value;
+                const descricao = document.getElementById('event-desc').value;
+                const valor = document.getElementById('event-value').value;
+                const status = document.getElementById('event-status').value;
+                
+                // Formatar a data para o padrão YYYY-MM-DD
+                const formattedDate = formatarDataParaPadrao(dateString);
+                
+                // Criar objeto do evento
+                const novoEvento = {
+                    descricao,
+                    valor: valor || '0',
+                    status
+                };
+                
+                // Adicionar ou atualizar evento
+                if (!eventos[formattedDate]) {
+                    eventos[formattedDate] = [];
+                }
+                
+                if (editingEventId) {
+                    // Editar evento existente
+                    eventos[editingEventId.dateString][editingEventId.index] = novoEvento;
+                    
+                    // Se a data foi alterada, remover da data antiga e adicionar na nova
+                    if (editingEventId.dateString !== formattedDate) {
+                        eventos[editingEventId.dateString].splice(editingEventId.index, 1);
+                        eventos[formattedDate].push(novoEvento);
+                        
+                        // Se não há mais eventos na data antiga, remover a propriedade
+                        if (eventos[editingEventId.dateString].length === 0) {
+                            delete eventos[editingEventId.dateString];
+                        }
+                    }
+                } else {
+                    // Adicionar novo evento
+                    eventos[formattedDate].push(novoEvento);
+                }
+                
+                // Salvar no localStorage
+                localStorage.setItem('agendaEventos', JSON.stringify(eventos));
+                
+                // Recarregar calendário e fechar modal
+                carregarCalendario();
+                fecharModal();
+            }
+            
+            // Funções auxiliares para formatação de datas
+            function formatarData(data) {
+                return `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}-${data.getDate().toString().padStart(2, '0')}`;
+            }
+            
+            function formatarDataParaInput(data) {
+                return formatarData(data);
+            }
+            
+            function formatarDataParaPadrao(dateString) {
+                // Converte de YYYY-MM-DD para o mesmo formato (já está no formato correto)
+                return dateString;
+            }
+        });
+    </script>
+</body>
+</html>
