@@ -220,6 +220,10 @@
             background-color: #f8f9fa;
             border: 1px dashed #ddd;
         }
+
+        .form-checkbox {
+            background-color: #f8f9fa;
+        }
         
         @media (max-width: 768px) {
             .calendar {
@@ -245,7 +249,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Agenda Financeira e de Lembretes</h1>
+            <h1>Agenda Financeira</h1>
         </header>
         
         <div class="controls">
@@ -268,7 +272,7 @@
                     <option value="11">Dezembro</option>
                 </select>
             </div>
-            <button id="btn-adicionar-mes">Adicionar Novo Evento</button>
+            <button id="btn-adicionar-mes">Adicionar Anotação</button>
         </div>
         
         <div class="calendar" id="calendar">
@@ -276,15 +280,24 @@
         </div>
         
         <div class="month-summary">
-            <h2>Resumo do Mês</h2>
+            <h2>Total das Despesas</h2>
             <div class="month-total" id="month-total">R$ 0,00</div>
+            <h3>Resumo do PIX</h3>
+            <div class="month-total" id="month-PIX">R$ 0,00</div>
+            <h3>Resumo do Cartão</h3>
+            <div class="month-total" id="month-Cartão">R$ 0,00</div>
+            <h3>Resumo do Dinheiro</h3>
+            <div class="month-total" id="month-Dinheiro">R$ 0,00</div>
+            <h3>Resumo do Família</h3>
+            <div class="month-total" id="month-Família">R$ 0,00</div>
+            
         </div>
     </div>
     
     <!-- Modal para adicionar/editar eventos -->
     <div class="modal" id="event-modal">
         <div class="modal-content">
-            <h2 id="modal-title">Adicionar Evento</h2>
+            <h2 id="modal-title">Adicione</h2>
             <form id="event-form">
                 <div class="form-group">
                     <label for="event-date">Data:</label>
@@ -299,15 +312,30 @@
                     <input type="number" id="event-value" step="0.01" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="event-status">Status:</label>
+                    <label for="event-status">Finalidade:</label>
                     <select id="event-status">
-                        <option value="pendente">Pendente</option>
-                        <option value="concluido">Concluído</option>
+                        <option value="Diversos">Diversos</option>
+                        <option value="Supermercado">Supermercado</option>
+                        <option value="Padaria">Padaria</option>
+                        <option value="Farmácia">Farmácia</option>
+                        <option value="Lazer">Lazer</option>
+                        <option value="FastFood">FastFood</option>
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Manutenção/Oficina">Manutenção/Oficina</option>
+                        <option value="Seguro">Seguro</option>
+                        <option value="Emplacamento">Emplacamento</option>
+
                     </select>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" id="btn-cancel">Cancelar</button>
                     <button type="submit" class="btn-save">Salvar</button>
+                </div>
+                <div class="form-checkbox">
+                    <input type="radio" class="PIX" id="PIX"> PIX
+                    <input type="radio" class="Cartão" id="Cartão"> Cartão
+                    <input type="radio" class="Dinheiro" id="Dinheiro"> Dinheiro
+                    <input type="radio" class="Família" id="Família"> Família
                 </div>
             </form>
         </div>
@@ -420,7 +448,7 @@
                             
                             const status = document.createElement('div');
                             status.className = 'event-status';
-                            status.textContent = evento.status === 'concluido' ? 'Concluído' : 'Pendente';
+                            status.textContent = evento.status === 'Diversos' ? 'Diversos ' : 'Supermercado ' : 'Padaria' : 'Farmácia' : 'Lazer' : 'FastFood':'Gasolina' : 'Manutenção/Oficina' : 'Seguro' : 'Emplacamento';
                             eventEl.appendChild(status);
                             
                             // Adicionar evento de clique para editar
