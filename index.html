@@ -83,6 +83,15 @@
             background-color: var(--primary-color);
         }
         
+        .btn-export {
+            background-color: var(--success-color);
+        }
+        
+        .btn-delete {
+            background-color: var(--danger-color);
+            margin-left: 10px;
+        }
+        
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -123,6 +132,7 @@
             border-left: 4px solid var(--accent-color);
             cursor: pointer;
             transition: transform 0.2s;
+            position: relative;
         }
         
         .event:hover {
@@ -254,13 +264,15 @@
         
         .form-actions {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             gap: 10px;
             margin-top: 15px;
-            position: sticky;
-            bottom: 0;
-            background: white;
-            padding: 10px 0;
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
         
         .btn-cancel {
@@ -306,6 +318,18 @@
             margin-right: 8px;
         }
         
+        .config-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .config-panel h2 {
+            margin-bottom: 15px;
+        }
+        
         @media (max-width: 768px) {
             .calendar {
                 grid-template-columns: repeat(1, 1fr);
@@ -335,12 +359,13 @@
                 width: calc(100% - 40px);
             }
             
-            .form-actions {
+            .form-buttons {
                 flex-direction: column;
             }
             
-            .btn-cancel, .btn-save {
+            .btn-cancel, .btn-save, .btn-delete {
                 width: 100%;
+                margin: 5px 0;
             }
         }
 
@@ -392,7 +417,10 @@
                     <option value="11">Dezembro</option>
                 </select>
             </div>
-            <button id="btn-adicionar-mes">Adicionar Anotação</button>
+            <div>
+                <button id="btn-adicionar-mes">Adicionar Anotação</button>
+                <button id="btn-exportar" class="btn-export">Enviar para Google Planilhas</button>
+            </div>
         </div>
         
         <div class="calendar" id="calendar">
@@ -414,6 +442,16 @@
             
             <h3>Resumo do Família</h3>
             <div class="month-total" id="month-Família">R$ 0,00</div>
+        </div>
+        
+        <div class="config-panel">
+            <h2>Configuração do Google Planilhas</h2>
+            <div class="form-group">
+                <label for="script-url">URL do Google Apps Script:</label>
+                <input type="text" id="script-url" placeholder="Cole a URL do seu Google Apps Script aqui" style="width: 100%;">
+            </div>
+            <button id="btn-salvar-config">Salvar Configuração</button>
+            <p><small>Veja as instruções de configuração abaixo.</small></p>
         </div>
     </div>
     
@@ -469,8 +507,13 @@
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="btn-cancel">Cancelar</button>
-                    <button type="submit" class="btn-save">Salvar</button>
+                    <div>
+                        <button type="button" class="btn-delete" id="btn-delete" style="display: none;">Excluir</button>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn-cancel" id="btn-cancel">Cancelar</button>
+                        <button type="submit" class="btn-save">Salvar</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -491,6 +534,10 @@
             const eventForm = document.getElementById('event-form');
             const btnCancel = document.getElementById('btn-cancel');
             const btnAdicionarMes = document.getElementById('btn-adicionar-mes');
+            const btnDelete = document.getElementById('btn-delete');
+            const btnExportar = document.getElementById('btn-exportar');
+            const btnSalvarConfig = document.getElementById('btn-salvar-config');
+            const scriptUrlInput = document.getElementById('script-url');
             const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
             
             // Variáveis de estado
@@ -498,6 +545,12 @@
             let currentDate = new Date();
             let selectedDate = new Date();
             let editingEventId = null;
+            
+            // Carregar configuração salva
+            const scriptUrl = localStorage.getItem('googleScriptUrl');
+            if (scriptUrl) {
+                scriptUrlInput.value = scriptUrl;
+            }
             
             // Inicializar anos no select
             const currentYear = currentDate.getFullYear();
@@ -520,7 +573,10 @@
             mesSelect.addEventListener('change', carregarCalendario);
             btnAdicionarMes.addEventListener('click', abrirModalAdicionar);
             btnCancel.addEventListener('click', fecharModal);
+            btnDelete.addEventListener('click', excluirEvento);
             eventForm.addEventListener('submit', salvarEvento);
+            btnExportar.addEventListener('click', exportarParaGoogleSheets);
+            btnSalvarConfig.addEventListener('click', salvarConfiguracao);
             
             // Adicionar interatividade aos métodos de pagamento
             paymentMethods.forEach(method => {
@@ -657,6 +713,7 @@
                 editingEventId = null;
                 document.getElementById('modal-title').textContent = 'Adicionar Evento';
                 eventForm.reset();
+                btnDelete.style.display = 'none';
                 
                 // Definir data padrão para a data selecionada
                 document.getElementById('event-date').value = formatarDataParaInput(selectedDate);
@@ -691,7 +748,32 @@
                     }
                 });
                 
+                // Mostrar botão de excluir
+                btnDelete.style.display = 'block';
+                
                 eventModal.style.display = 'flex';
+            }
+            
+            // Função para excluir evento
+            function excluirEvento() {
+                if (editingEventId && confirm('Tem certeza que deseja excluir este evento?')) {
+                    const { dateString, index } = editingEventId;
+                    
+                    // Remover evento
+                    eventos[dateString].splice(index, 1);
+                    
+                    // Se não há mais eventos na data, remover a propriedade
+                    if (eventos[dateString].length === 0) {
+                        delete eventos[dateString];
+                    }
+                    
+                    // Salvar no localStorage
+                    localStorage.setItem('agendaEventos', JSON.stringify(eventos));
+                    
+                    // Recarregar calendário e fechar modal
+                    carregarCalendario();
+                    fecharModal();
+                }
             }
             
             // Função para fechar o modal
@@ -762,6 +844,70 @@
                 // Recarregar calendário e fechar modal
                 carregarCalendario();
                 fecharModal();
+            }
+            
+            // Função para salvar configuração do Google Script
+            function salvarConfiguracao() {
+                const url = scriptUrlInput.value.trim();
+                if (url) {
+                    localStorage.setItem('googleScriptUrl', url);
+                    alert('Configuração salva com sucesso!');
+                } else {
+                    alert('Por favor, insira uma URL válida.');
+                }
+            }
+            
+            // Função para exportar dados para o Google Sheets
+            function exportarParaGoogleSheets() {
+                const scriptUrl = localStorage.getItem('googleScriptUrl');
+                
+                if (!scriptUrl) {
+                    alert('Por favor, configure a URL do Google Apps Script primeiro.');
+                    return;
+                }
+                
+                // Preparar dados para envio
+                const allEvents = [];
+                for (const date in eventos) {
+                    eventos[date].forEach(event => {
+                        allEvents.push({
+                            data: date,
+                            descricao: event.descricao,
+                            valor: event.valor,
+                            status: event.status,
+                            paymentMethod: event.paymentMethod
+                        });
+                    });
+                }
+                
+                if (allEvents.length === 0) {
+                    alert('Não há eventos para exportar.');
+                    return;
+                }
+                
+                // Mostrar mensagem de processamento
+                btnExportar.textContent = 'Exportando...';
+                btnExportar.disabled = true;
+                
+                // Enviar dados para o Google Apps Script
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(allEvents)
+                })
+                .then(() => {
+                    alert('Dados enviados para o Google Planilhas com sucesso!');
+                })
+                .catch(error => {
+                    alert('Erro ao enviar dados: ' + error.message);
+                })
+                .finally(() => {
+                    btnExportar.textContent = 'Enviar para Google Planilhas';
+                    btnExportar.disabled = false;
+                });
             }
             
             // Funções auxiliares para formatação de datas
