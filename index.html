@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,14 +20,14 @@
             --dinheiro-color: #FFB74D;
             --familia-color: #E57373;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #f5f7fa;
             color: var(--dark-color);
@@ -34,13 +35,13 @@
             padding: 0;
             margin: 0;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         header {
             background-color: var(--primary-color);
             color: white;
@@ -49,7 +50,7 @@
             border-radius: 8px 8px 0 0;
             margin-bottom: 20px;
         }
-        
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -58,19 +59,21 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
+
         .date-selectors {
             display: flex;
             gap: 10px;
         }
-        
-        select, input, button {
+
+        select,
+        input,
+        button {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
         }
-        
+
         button {
             background-color: var(--secondary-color);
             color: white;
@@ -78,27 +81,27 @@
             transition: background-color 0.3s;
             border: none;
         }
-        
+
         button:hover {
             background-color: var(--primary-color);
         }
-        
+
         .btn-export {
             background-color: var(--success-color);
         }
-        
+
         .btn-delete {
             background-color: var(--danger-color);
             margin-left: 10px;
         }
-        
+
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
-        
+
         .day-header {
             background-color: var(--secondary-color);
             color: white;
@@ -107,7 +110,7 @@
             border-radius: 4px;
             font-weight: bold;
         }
-        
+
         .day {
             background-color: white;
             border: 1px solid #ddd;
@@ -116,14 +119,14 @@
             min-height: 150px;
             position: relative;
         }
-        
+
         .day-number {
             font-weight: bold;
             margin-bottom: 5px;
             display: block;
             text-align: right;
         }
-        
+
         .event {
             background-color: #e9ecef;
             padding: 8px;
@@ -134,22 +137,22 @@
             transition: transform 0.2s;
             position: relative;
         }
-        
+
         .event:hover {
             transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
+
         .event-descricao {
             font-size: 14px;
             margin-bottom: 5px;
         }
-        
+
         .event-valor {
             font-weight: bold;
             color: var(--secondary-color);
         }
-        
+
         .event-status {
             display: inline-block;
             padding: 2px 6px;
@@ -158,7 +161,7 @@
             margin-top: 5px;
             background-color: #dee2e6;
         }
-        
+
         .day-total {
             position: absolute;
             bottom: 5px;
@@ -169,19 +172,20 @@
             border-radius: 3px;
             font-size: 12px;
         }
-        
+
         .month-summary {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
-        .month-summary h2, .month-summary h3 {
+
+        .month-summary h2,
+        .month-summary h3 {
             margin-bottom: 10px;
             color: var(--dark-color);
         }
-        
+
         .month-total {
             font-size: 24px;
             font-weight: bold;
@@ -191,32 +195,32 @@
             padding: 10px;
             border-radius: 5px;
         }
-        
+
         #month-total {
             color: var(--secondary-color);
             background-color: #e9ecef;
         }
-        
+
         #month-PIX {
             color: var(--pix-color);
             background-color: rgba(50, 187, 173, 0.1);
         }
-        
+
         #month-Cartão {
             color: var(--cartao-color);
             background-color: rgba(108, 99, 255, 0.1);
         }
-        
+
         #month-Dinheiro {
             color: var(--dinheiro-color);
             background-color: rgba(255, 183, 77, 0.1);
         }
-        
+
         #month-Família {
             color: var(--familia-color);
             background-color: rgba(229, 115, 115, 0.1);
         }
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -224,35 +228,35 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
             z-index: 1000;
             overflow: auto;
             padding: 20px;
         }
-        
+
         .modal-content {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             width: 100%;
             max-width: 500px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             max-height: 90vh;
             overflow-y: auto;
         }
-        
+
         .form-group {
             margin-bottom: 15px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        
+
         textarea {
             width: 100%;
             padding: 10px;
@@ -261,28 +265,28 @@
             resize: vertical;
             min-height: 80px;
         }
-        
+
         .form-actions {
             display: flex;
             justify-content: space-between;
             gap: 10px;
             margin-top: 15px;
         }
-        
+
         .form-buttons {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
-        
+
         .btn-cancel {
             background-color: var(--danger-color);
         }
-        
+
         .btn-save {
             background-color: var(--success-color);
         }
-        
+
         .empty-day {
             background-color: #f8f9fa;
             border: 1px dashed #ddd;
@@ -294,7 +298,7 @@
             gap: 10px;
             margin: 15px 0;
         }
-        
+
         .payment-method {
             display: flex;
             align-items: center;
@@ -304,66 +308,68 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        
+
         .payment-method:hover {
             background-color: #f0f0f0;
         }
-        
+
         .payment-method.selected {
             background-color: #e6f7ff;
             border-color: var(--primary-color);
         }
-        
+
         .payment-method input {
             margin-right: 8px;
         }
-        
+
         .config-panel {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
-        
+
         .config-panel h2 {
             margin-bottom: 15px;
         }
-        
+
         @media (max-width: 768px) {
             .calendar {
                 grid-template-columns: repeat(1, 1fr);
             }
-            
+
             .controls {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .date-selectors {
                 width: 100%;
                 justify-content: space-between;
             }
-            
+
             select {
                 flex: 1;
             }
-            
+
             .payment-methods {
                 grid-template-columns: 1fr;
             }
-            
+
             .modal-content {
                 padding: 15px;
                 margin: 20px;
                 width: calc(100% - 40px);
             }
-            
+
             .form-buttons {
                 flex-direction: column;
             }
-            
-            .btn-cancel, .btn-save, .btn-delete {
+
+            .btn-cancel,
+            .btn-save,
+            .btn-delete {
                 width: 100%;
                 margin: 5px 0;
             }
@@ -373,30 +379,33 @@
             .container {
                 padding: 10px;
             }
-            
+
             .modal-content {
                 padding: 12px;
                 margin: 10px;
                 width: calc(100% - 20px);
             }
-            
-            select, input, button {
+
+            select,
+            input,
+            button {
                 padding: 8px;
                 font-size: 14px;
             }
-            
+
             .payment-method {
                 padding: 8px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Agenda Financeira</h1>
         </header>
-        
+
         <div class="controls">
             <div class="date-selectors">
                 <select id="ano-select">
@@ -422,39 +431,40 @@
                 <button id="btn-exportar" class="btn-export">Enviar para Google Planilhas</button>
             </div>
         </div>
-        
+
         <div class="calendar" id="calendar">
             <!-- Os dias serão gerados via JavaScript -->
         </div>
-        
+
         <div class="month-summary">
             <h2>Total das Despesas</h2>
             <div class="month-total" id="month-total">R$ 0,00</div>
-            
+
             <h3>Resumo do PIX</h3>
             <div class="month-total" id="month-PIX">R$ 0,00</div>
-            
+
             <h3>Resumo do Cartão</h3>
             <div class="month-total" id="month-Cartão">R$ 0,00</div>
-            
+
             <h3>Resumo do Dinheiro</h3>
             <div class="month-total" id="month-Dinheiro">R$ 0,00</div>
-            
+
             <h3>Resumo do Família</h3>
             <div class="month-total" id="month-Família">R$ 0,00</div>
         </div>
-        
+
         <div class="config-panel">
             <h2>Configuração do Google Planilhas</h2>
             <div class="form-group">
                 <label for="script-url">URL do Google Apps Script:</label>
-                <input type="text" id="script-url" placeholder="Cole a URL do seu Google Apps Script aqui" style="width: 100%;">
+                <input type="text" id="script-url" placeholder="Cole a URL do seu Google Apps Script aqui"
+                    style="width: 100%;">
             </div>
             <button id="btn-salvar-config">Salvar Configuração</button>
             <p><small>Veja as instruções de configuração abaixo.</small></p>
         </div>
     </div>
-    
+
     <!-- Modal para adicionar/editar eventos -->
     <div class="modal" id="event-modal">
         <div class="modal-content">
@@ -487,7 +497,7 @@
                         <option value="Emplacamento">Emplacamento</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Método de Pagamento:</label>
                     <div class="payment-methods">
@@ -505,7 +515,7 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <div class="form-actions">
                     <div>
                         <button type="button" class="btn-delete" id="btn-delete" style="display: none;">Excluir</button>
@@ -520,7 +530,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Elementos DOM
             const anoSelect = document.getElementById('ano-select');
             const mesSelect = document.getElementById('mes-select');
@@ -539,19 +549,19 @@
             const btnSalvarConfig = document.getElementById('btn-salvar-config');
             const scriptUrlInput = document.getElementById('script-url');
             const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
-            
+
             // Variáveis de estado
             let eventos = JSON.parse(localStorage.getItem('agendaEventos')) || {};
             let currentDate = new Date();
             let selectedDate = new Date();
             let editingEventId = null;
-            
+
             // Carregar configuração salva
             const scriptUrl = localStorage.getItem('googleScriptUrl');
             if (scriptUrl) {
                 scriptUrlInput.value = scriptUrl;
             }
-            
+
             // Inicializar anos no select
             const currentYear = currentDate.getFullYear();
             for (let i = currentYear - 5; i <= currentYear + 5; i++) {
@@ -561,13 +571,13 @@
                 if (i === currentYear) option.selected = true;
                 anoSelect.appendChild(option);
             }
-            
+
             // Definir mês atual
             mesSelect.value = currentDate.getMonth();
-            
+
             // Carregar calendário
             carregarCalendario();
-            
+
             // Event Listeners
             anoSelect.addEventListener('change', carregarCalendario);
             mesSelect.addEventListener('change', carregarCalendario);
@@ -577,10 +587,10 @@
             eventForm.addEventListener('submit', salvarEvento);
             btnExportar.addEventListener('click', exportarParaGoogleSheets);
             btnSalvarConfig.addEventListener('click', salvarConfiguracao);
-            
+
             // Adicionar interatividade aos métodos de pagamento
             paymentMethods.forEach(method => {
-                method.addEventListener('change', function() {
+                method.addEventListener('change', function () {
                     document.querySelectorAll('.payment-method').forEach(el => {
                         el.classList.remove('selected');
                     });
@@ -589,15 +599,15 @@
                     }
                 });
             });
-            
+
             // Função para carregar o calendário
             function carregarCalendario() {
                 const ano = parseInt(anoSelect.value);
                 const mes = parseInt(mesSelect.value);
-                
+
                 // Limpar calendário
                 calendarEl.innerHTML = '';
-                
+
                 // Adicionar cabeçalhos dos dias da semana
                 const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
                 diasSemana.forEach(dia => {
@@ -606,39 +616,39 @@
                     diaHeader.textContent = dia;
                     calendarEl.appendChild(diaHeader);
                 });
-                
+
                 // Obter primeiro dia do mês e último dia do mês
                 const primeiroDia = new Date(ano, mes, 1);
                 const ultimoDia = new Date(ano, mes + 1, 0);
-                
+
                 // Dias vazios no início (se o mês não começar no domingo)
                 for (let i = 0; i < primeiroDia.getDay(); i++) {
                     const emptyDay = document.createElement('div');
                     emptyDay.className = 'day empty-day';
                     calendarEl.appendChild(emptyDay);
                 }
-                
+
                 // Inicializar totais
                 let totalMes = 0;
                 let totalPix = 0;
                 let totalCartao = 0;
                 let totalDinheiro = 0;
                 let totalFamilia = 0;
-                
+
                 // Dias do mês
                 for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
                     const dayEl = document.createElement('div');
                     dayEl.className = 'day';
-                    
+
                     const dayNumber = document.createElement('span');
                     dayNumber.className = 'day-number';
                     dayNumber.textContent = dia;
                     dayEl.appendChild(dayNumber);
-                    
+
                     // Data atual no loop
                     const currentLoopDate = new Date(ano, mes, dia);
                     const dateString = formatarData(currentLoopDate);
-                    
+
                     // Verificar se há eventos para este dia
                     let totalDia = 0;
                     if (eventos[dateString]) {
@@ -646,38 +656,38 @@
                             const eventEl = document.createElement('div');
                             eventEl.className = 'event';
                             eventEl.dataset.id = `${dateString}-${index}`;
-                            
+
                             const descricao = document.createElement('div');
                             descricao.className = 'event-descricao';
                             descricao.textContent = evento.descricao;
                             eventEl.appendChild(descricao);
-                            
+
                             if (evento.valor) {
                                 const valor = document.createElement('div');
                                 valor.className = 'event-valor';
                                 valor.textContent = `R$ ${parseFloat(evento.valor).toFixed(2)}`;
                                 eventEl.appendChild(valor);
                                 totalDia += parseFloat(evento.valor);
-                                
+
                                 // Acumular totais por método de pagamento
                                 if (evento.paymentMethod === 'PIX') totalPix += parseFloat(evento.valor);
                                 else if (evento.paymentMethod === 'Cartão') totalCartao += parseFloat(evento.valor);
                                 else if (evento.paymentMethod === 'Dinheiro') totalDinheiro += parseFloat(evento.valor);
                                 else if (evento.paymentMethod === 'Família') totalFamilia += parseFloat(evento.valor);
                             }
-                            
+
                             const status = document.createElement('div');
                             status.className = 'event-status';
                             status.textContent = evento.status;
                             eventEl.appendChild(status);
-                            
+
                             // Adicionar evento de clique para editar
                             eventEl.addEventListener('click', () => editarEvento(dateString, index));
-                            
+
                             dayEl.appendChild(eventEl);
                         });
                     }
-                    
+
                     // Adicionar botão para adicionar evento neste dia
                     const addButton = document.createElement('button');
                     addButton.textContent = '+';
@@ -687,7 +697,7 @@
                         abrirModalAdicionar();
                     });
                     dayEl.appendChild(addButton);
-                    
+
                     // Adicionar total do dia
                     if (totalDia > 0) {
                         const dayTotalEl = document.createElement('div');
@@ -696,10 +706,10 @@
                         dayEl.appendChild(dayTotalEl);
                         totalMes += totalDia;
                     }
-                    
+
                     calendarEl.appendChild(dayEl);
                 }
-                
+
                 // Atualizar totais do mês
                 monthTotalEl.textContent = `R$ ${totalMes.toFixed(2)}`;
                 monthPixEl.textContent = `R$ ${totalPix.toFixed(2)}`;
@@ -707,36 +717,36 @@
                 monthDinheiroEl.textContent = `R$ ${totalDinheiro.toFixed(2)}`;
                 monthFamiliaEl.textContent = `R$ ${totalFamilia.toFixed(2)}`;
             }
-            
+
             // Função para abrir modal de adicionar evento
             function abrirModalAdicionar() {
                 editingEventId = null;
                 document.getElementById('modal-title').textContent = 'Adicionar Evento';
                 eventForm.reset();
                 btnDelete.style.display = 'none';
-                
+
                 // Definir data padrão para a data selecionada
                 document.getElementById('event-date').value = formatarDataParaInput(selectedDate);
-                
+
                 // Limpar seleção de métodos de pagamento
                 document.querySelectorAll('.payment-method').forEach(el => {
                     el.classList.remove('selected');
                 });
-                
+
                 eventModal.style.display = 'flex';
             }
-            
+
             // Função para editar evento existente
             function editarEvento(dateString, index) {
                 editingEventId = { dateString, index };
                 const evento = eventos[dateString][index];
-                
+
                 document.getElementById('modal-title').textContent = 'Editar Evento';
                 document.getElementById('event-date').value = dateString;
                 document.getElementById('event-desc').value = evento.descricao;
                 document.getElementById('event-value').value = evento.valor || '';
                 document.getElementById('event-status').value = evento.status;
-                
+
                 // Selecionar o método de pagamento correto
                 document.querySelectorAll('input[name="payment-method"]').forEach(input => {
                     if (input.value === evento.paymentMethod) {
@@ -747,49 +757,49 @@
                         input.parentElement.classList.remove('selected');
                     }
                 });
-                
+
                 // Mostrar botão de excluir
                 btnDelete.style.display = 'block';
-                
+
                 eventModal.style.display = 'flex';
             }
-            
+
             // Função para excluir evento
             function excluirEvento() {
                 if (editingEventId && confirm('Tem certeza que deseja excluir este evento?')) {
                     const { dateString, index } = editingEventId;
-                    
+
                     // Remover evento
                     eventos[dateString].splice(index, 1);
-                    
+
                     // Se não há mais eventos na data, remover a propriedade
                     if (eventos[dateString].length === 0) {
                         delete eventos[dateString];
                     }
-                    
+
                     // Salvar no localStorage
                     localStorage.setItem('agendaEventos', JSON.stringify(eventos));
-                    
+
                     // Recarregar calendário e fechar modal
                     carregarCalendario();
                     fecharModal();
                 }
             }
-            
+
             // Função para fechar o modal
             function fecharModal() {
                 eventModal.style.display = 'none';
             }
-            
+
             // Função para salvar evento (novo ou editado)
             function salvarEvento(e) {
                 e.preventDefault();
-                
+
                 const dateString = document.getElementById('event-date').value;
                 const descricao = document.getElementById('event-desc').value;
                 const valor = document.getElementById('event-value').value;
                 const status = document.getElementById('event-status').value;
-                
+
                 // Obter método de pagamento selecionado
                 let paymentMethod = '';
                 document.querySelectorAll('input[name="payment-method"]').forEach(input => {
@@ -797,15 +807,15 @@
                         paymentMethod = input.value;
                     }
                 });
-                
+
                 if (!paymentMethod) {
                     alert('Selecione um método de pagamento!');
                     return;
                 }
-                
+
                 // Formatar a data para o padrão YYYY-MM-DD
                 const formattedDate = formatarDataParaPadrao(dateString);
-                
+
                 // Criar objeto do evento
                 const novoEvento = {
                     descricao,
@@ -813,21 +823,21 @@
                     status,
                     paymentMethod
                 };
-                
+
                 // Adicionar ou atualizar evento
                 if (!eventos[formattedDate]) {
                     eventos[formattedDate] = [];
                 }
-                
+
                 if (editingEventId) {
                     // Editar evento existente
                     eventos[editingEventId.dateString][editingEventId.index] = novoEvento;
-                    
+
                     // Se a data foi alterada, remover da data antiga e adicionar na nova
                     if (editingEventId.dateString !== formattedDate) {
                         eventos[editingEventId.dateString].splice(editingEventId.index, 1);
                         eventos[formattedDate].push(novoEvento);
-                        
+
                         // Se não há mais eventos na data antiga, remover a propriedade
                         if (eventos[editingEventId.dateString].length === 0) {
                             delete eventos[editingEventId.dateString];
@@ -837,15 +847,15 @@
                     // Adicionar novo evento
                     eventos[formattedDate].push(novoEvento);
                 }
-                
+
                 // Salvar no localStorage
                 localStorage.setItem('agendaEventos', JSON.stringify(eventos));
-                
+
                 // Recarregar calendário e fechar modal
                 carregarCalendario();
                 fecharModal();
             }
-            
+
             // Função para salvar configuração do Google Script
             function salvarConfiguracao() {
                 const url = scriptUrlInput.value.trim();
@@ -856,16 +866,16 @@
                     alert('Por favor, insira uma URL válida.');
                 }
             }
-            
+
             // Função para exportar dados para o Google Sheets
             function exportarParaGoogleSheets() {
                 const scriptUrl = localStorage.getItem('googleScriptUrl');
-                
+
                 if (!scriptUrl) {
                     alert('Por favor, configure a URL do Google Apps Script primeiro.');
                     return;
                 }
-                
+
                 // Preparar dados para envio
                 const allEvents = [];
                 for (const date in eventos) {
@@ -879,16 +889,16 @@
                         });
                     });
                 }
-                
+
                 if (allEvents.length === 0) {
                     alert('Não há eventos para exportar.');
                     return;
                 }
-                
+
                 // Mostrar mensagem de processamento
                 btnExportar.textContent = 'Exportando...';
                 btnExportar.disabled = true;
-                
+
                 // Enviar dados para o Google Apps Script
                 fetch(scriptUrl, {
                     method: 'POST',
@@ -898,31 +908,39 @@
                     },
                     body: JSON.stringify(allEvents)
                 })
-                .then(() => {
-                    alert('Dados enviados para o Google Planilhas com sucesso!');
-                })
-                .catch(error => {
-                    alert('Erro ao enviar dados: ' + error.message);
-                })
-                .finally(() => {
-                    btnExportar.textContent = 'Enviar para Google Planilhas';
-                    btnExportar.disabled = false;
-                });
+                    .then(() => {
+                        alert('Dados enviados para o Google Planilhas com sucesso!');
+                    })
+                    .catch(error => {
+                        alert('Erro ao enviar dados: ' + error.message);
+                    })
+                    .finally(() => {
+                        btnExportar.textContent = 'Enviar para Google Planilhas';
+                        btnExportar.disabled = false;
+                    });
             }
-            
+
             // Funções auxiliares para formatação de datas
             function formatarData(data) {
                 return `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}-${data.getDate().toString().padStart(2, '0')}`;
             }
-            
+
             function formatarDataParaInput(data) {
                 return formatarData(data);
             }
-            
+
             function formatarDataParaPadrao(dateString) {
                 return dateString;
             }
         });
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
+
 </html>
