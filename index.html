@@ -19,6 +19,7 @@
             --cartao-color: #6C63FF;
             --dinheiro-color: #FFB74D;
             --familia-color: #E57373;
+            --cancel-color: #f0ad4e;
         }
 
         * {
@@ -280,7 +281,7 @@
         }
 
         .btn-cancel {
-            background-color: var(--danger-color);
+            background-color: var(--cancel-color);
         }
 
         .btn-save {
@@ -428,7 +429,7 @@
             </div>
             <div>
                 <button id="btn-adicionar-mes">Adicionar Anotação</button>
-                <button id="btn-exportar" class="btn-export">Enviar para Google Planilhas</button>
+                <!-- <button id="btn-exportar" class="btn-export">Exportar Planilha</button> -->
             </div>
         </div>
 
@@ -453,7 +454,7 @@
             <div class="month-total" id="month-Família">R$ 0,00</div>
         </div>
 
-        <div class="config-panel">
+        <!-- <div class="config-panel">
             <h2>Configuração do Google Planilhas</h2>
             <div class="form-group">
                 <label for="script-url">URL do Google Apps Script:</label>
@@ -462,7 +463,8 @@
             </div>
             <button id="btn-salvar-config">Salvar Configuração</button>
             <p><small>Veja as instruções de configuração abaixo.</small></p>
-        </div>
+        </div> -->
+                
     </div>
 
     <!-- Modal para adicionar/editar eventos -->
@@ -934,6 +936,7 @@
             }
         });
 
+        // Funções para bloquear ações indesejadas
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function (e) {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
